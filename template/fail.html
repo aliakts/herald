@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body itemscope="" itemtype="http://schema.org/EmailMessage" style="background-color: #fafafa; font-family: Roboto, sans-serif;">
+<div style="width: 600px; margin: 0 auto;">
+
+    <table style="width: 100%; padding: 34px 0px; border-spacing: 0;">
+
+    </table>
+
+    <div style="background-color: white; border-top: 4px solid #d40001; border-left: 1px solid #eee; border-right: 1px solid #eee; border-radius: 6px 6px 0 0; height: 24px;"></div>
+    <div style="background-color: white; border-left: 1px solid #eee; border-right: 1px solid #eee; padding: 0 24px; overflow: hidden;">
+        <div style="display:flex">
+
+            <span style="margin-left: 35px; background-color: #D500001F; padding: 6px; align-items:center; border-radius: 2px;">
+          <img src="https://www.gstatic.com/stackdriver/notification/error.png" alt="error icon" style="vertical-align: top; width: 18px; height: 18px;">
+          <span style="font-size: 100%;">Alert firing</span>
+        </span>
+            <span style="margin-left: 5px; background-color: #FBBC041F; padding:6px; align-items:center">
+          <img src="https://www.gstatic.com/cloud-monitoring/severity_warning.png" alt="Warning" style="vertical-align: top; width: 18px; height: 18px;">
+          <span style="font-size: 100%;"> Warning</span>
+        </span>
+        </div>
+
+        <div style="margin-left: 35px;">
+            <h1>Kubernetes Job Failure</h1>
+            <p>{{.Labels}}</p>
+            <h2>Summary</h2>
+            <p><strong>Start time</strong><br>{{.Date}}</p>
+            <p><strong>Job name</strong><br>{{.JobName}}</p>
+            <p><strong>Namespace</strong><br>{{.Namespace}}</p>
+            <p><strong>Annotations</strong><br>{{.Annotations}}</p>
+            <p><strong>UID</strong><br>{{.UID}}</p>
+        </div>
+
+    </div>
+    <div style="padding: 20px 6px; text-align: center; color: #757575;">
+        <p>© 2024 Herald<br>
+    </div>
+</div>
+</body>
+</html>
