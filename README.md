@@ -100,3 +100,8 @@ spec:
               cpu: 500m
               memory: 128Mi
 ```
+
+## License
+
+Apache 2.0. See [LICENSE](./LICENSE).
+
