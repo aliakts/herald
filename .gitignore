@@ -12,6 +12,10 @@
 .idea
 herald
 
+cli/*
+deployment/*
+kubernetes/context.go
+
 # Test binary, built with `go test -c`
 *.test
 
