@@ -6,20 +6,20 @@ No extra setup required to deploy this tool on to your cluster, just apply below
 
 Uses `InClusterConfig` to access the Kubernetes API.
 
+# Development
+
+```bash
+export namespace="foo" && export notification_level="failed" && export in_cluster="0" && export sender="sender@example.com" &&  export sender_password="" && export receivers="foo@example.com, bar@example.com" && export smtp_host="smtp.example.com" && export smtp_port="587" && go build -o herald && ./herald
+```
+
 # Limitations
 
 Namespace scoped i.e., each namespace should have this deploy separately
 
-# Development
-
-**Notification Levels**
+# Notification Levels 
 
 * succeeded
 * failed
-
-```bash
-export namespace="foo" && export notification_level="failed" && export in_cluster="0" && go build -o herald && ./herald
-```
 
 # Installation
 
@@ -92,6 +92,16 @@ spec:
               value: "failed"
             - name: in_cluster
               value: "1"
+            - name: sender
+              value: "sender@example.com"
+            - name: sender_password
+              value: ""
+            - name: receivers
+              value: "foo@example.com, bar@example.com"
+            - name: smtp_host
+              value: "smtp.example.com"
+            - name: smtp_port
+              value: "587"
           resources:
             limits:
               cpu: 500m
