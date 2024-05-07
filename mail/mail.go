@@ -2,25 +2,74 @@ package mail
 
 import (
 	"bytes"
+	"crypto/tls"
+	"errors"
 	"fmt"
-	"k8s.io/apimachinery/pkg/types"
 	"log"
+	"net"
 	"net/smtp"
 	"text/template"
 	"time"
+
+	"k8s.io/apimachinery/pkg/types"
 )
 
-func SendMail(level string, labels map[string]string, date time.Time, jobName string, namespace string, annotations map[string]string, uid types.UID) {
-	from := "sender@example.com"
-	password := "password"
+type loginAuth struct {
+	username, password string
+}
 
-	to := []string{
-		"receiver@example.com",
+func LoginAuth(username, password string) smtp.Auth {
+	return &loginAuth{username, password}
+}
+
+func (a *loginAuth) Start(server *smtp.ServerInfo) (string, []byte, error) {
+	return "LOGIN", []byte(a.username), nil
+}
+
+func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
+	if more {
+		switch string(fromServer) {
+		case "Username:":
+			return []byte(a.username), nil
+		case "Password:":
+			return []byte(a.password), nil
+		default:
+			return nil, errors.New("Unknown from server")
+		}
+	}
+	return nil, nil
+}
+
+func SendMail(level string, labels map[string]string, date time.Time, jobName string, namespace string, annotations map[string]string, uid types.UID, sender string, senderPassword string, receivers []string, smtpHost string, smtpPort string) {
+	from := sender
+	password := senderPassword
+
+	to := receivers
+
+	//auth := smtp.PlainAuth("", from, password, smtpHost)
+	conn, err := net.Dial("tcp", smtpHost+":"+smtpPort)
+	if err != nil {
+		println(err)
 	}
 
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-	auth := smtp.PlainAuth("", from, password, smtpHost)
+	c, err := smtp.NewClient(conn, smtpHost)
+	if err != nil {
+		println(err)
+	}
+
+	tlsconfig := &tls.Config{
+		ServerName: smtpHost,
+	}
+
+	if err = c.StartTLS(tlsconfig); err != nil {
+		println(err)
+	}
+
+	auth := LoginAuth(from, password)
+
+	if err = c.Auth(auth); err != nil {
+		println(err)
+	}
 
 	if level == "failed" {
 		t, err := template.ParseFiles("template/fail.html")
